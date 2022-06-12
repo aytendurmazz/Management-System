@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace WebApp.Migrations
 {
-    public partial class CreateIdentityShema : Migration
+    public partial class IdentitySchema : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

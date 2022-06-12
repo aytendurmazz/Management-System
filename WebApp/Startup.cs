@@ -39,19 +39,14 @@ namespace WebApp
             });
 
             //Dependency Injection for ef core Data Store for SQL
-            services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<ITransactionRepository, TransactionRepository>();
+            services.AddScoped<IPersonRepository, PersonRepository>();
 
             //Dependency Injection for Use Cases and Repositories
-            services.AddTransient<IViewProductsUseCase, ViewProductsUseCase>();
-            services.AddTransient<IAddProductUseCase, AddProductUseCase>();
-            services.AddTransient<IEditProductUseCase, EditProductUseCase>();
-            services.AddTransient<IGetProductByIdUseCase, GetProductByIdUseCase>();
-            services.AddTransient<IDeleteProductUseCase, DeleteProductUseCase>();
-            services.AddTransient<ISellProductUseCase, SellProductUseCase>();
-            services.AddTransient<IRecordTransactionUseCase, RecordTransactionUseCase>();
-            services.AddTransient<IGetTodayTransactionsUseCase, GetTodayTransactionsUseCase>();
-            services.AddTransient<IGetTransactionsUseCase, GetTransactionsUseCase>();
+            services.AddTransient<IAddPersonUseCase, AddPersonUseCase>();
+            services.AddTransient<IDeletePersonUseCase, DeletePersonUseCase>();
+            services.AddTransient<IEditPersonUseCase, EditPersonUseCase>();
+            services.AddTransient<IGetPersonByIdUseCase, GetPersonByIdUseCase>();
+            services.AddTransient<IViewPersonUseCase, ViewPersonUseCase>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

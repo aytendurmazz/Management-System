@@ -1,5 +1,7 @@
 ﻿using CoreBusiness;
 using Microsoft.EntityFrameworkCore;
+using System;
+using static CoreBusiness.Person;
 
 namespace Plugins.DataStore.SQL
 {
@@ -9,18 +11,10 @@ namespace Plugins.DataStore.SQL
         {
         }
 
-        public DbSet<Product> Products { get; set; }
-        public DbSet<Transaction> Transactions { get; set; }
+        public DbSet<Person> People { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            modelBuilder.Entity<Product>().HasData(
-                    new Product { ProductId = 1, Name = "Iced Tea", Quantity = 100, Price = 1.99 },
-                    new Product { ProductId = 2, Name = "Canada Dry", Quantity = 200, Price = 1.99 },
-                    new Product { ProductId = 3, Name = "Whole Wheat Bread", Quantity = 300, Price = 1.50 },
-                    new Product { ProductId = 4, Name = "White Bread", Quantity = 300, Price = 1.50 }
-                );
         }
     }
 }

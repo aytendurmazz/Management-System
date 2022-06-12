@@ -1,34 +1,42 @@
-﻿@page "/products"
+﻿@page "/people"
 @attribute [Authorize(Policy = "AdminOnly")]
 
 @inject NavigationManager NavigationManager
-@inject IViewProductsUseCase ViewProductsUseCase
-@inject IDeleteProductUseCase DeleteProductUseCase
+@inject IViewPersonUseCase ViewPersonUseCase
+@inject IDeletePersonUseCase DeletePersonUseCase
 
-<h3>Products</h3>
+<h3>Person</h3>
 <br />
-@if (products != null)
+@if (people != null)
 {
     <table class="table">
         <thead>
             <tr>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
+                <th>Profile Picture</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>DateofBirth</th>
+                <th>Gender</th>
+                <th>City</th>
+                <th>Age</th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var product in products)
+            @foreach (var person in people)
             {
                 <tr>
-                    <td>@product.Name</td>
-                    <td>@(Math.Round(product.Price.Value, 2))</td>
-                    <td>@product.Quantity</td>
+                    <td><img src="@person.Image" style="width:75px;height:auto;" /></td>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.DateofBirth</td>
+                    <td>@person.Gender</td>
+                    <td>@person.city</td>
+                    <td>@person.Age</td>
                     <td>
-                        <button type="button" class="btn btn-link" @onclick="@(()=>OnEditProduct(product))">Edit</button>
+                        <button type="button" class="btn btn-link" @onclick="@(()=>OnEditPerson(person))">Edit</button>
                         &nbsp;
-                        <button type="button" class="btn btn-link" @onclick="@(()=>OnDeleteProduct(product.ProductId))">Delete</button>
+                        <button type="button" class="btn btn-link" @onclick="@(()=>OnDeletePerson(person.PersonId))">Delete</button>
                     </td>
                 </tr>
             }
@@ -36,32 +44,33 @@
     </table>
 }
 <br />
-<button type="button" @onclick="OnClickAddProduct" class="btn btn-primary">Add Product</button>
+<button type="button" @onclick="OnClickAddPerson" class="btn btn-primary">Add Person</button>
 
 
 @code {
 
-    private IEnumerable<Product> products;
+    private IEnumerable<Person> people;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
 
-        products = ViewProductsUseCase.Execute();
+        people = ViewPersonUseCase.Execute();
     }
 
-    private void OnClickAddProduct()
+    private void OnClickAddPerson()
     {
-        NavigationManager.NavigateTo("/addproduct");
+        NavigationManager.NavigateTo("/addperson");
     }
 
-    private void OnEditProduct(Product product)
+    private void OnEditPerson(Person person)
     {
-        NavigationManager.NavigateTo($"/editproduct/{product.ProductId}");
+        NavigationManager.NavigateTo($"/editperson/{person.PersonId}");
     }
 
-    private void OnDeleteProduct(int productId)
+    private void OnDeletePerson(int PersonId)
     {
-        DeleteProductUseCase.Execute(productId);
+        DeletePersonUseCase.Execute(PersonId);
+        NavigationManager.NavigateTo("/people");
     }
 }

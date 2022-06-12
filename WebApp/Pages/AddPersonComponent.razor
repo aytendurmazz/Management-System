@@ -1,0 +1,107 @@
+﻿@page "/addperson"
+@attribute [Authorize(Policy ="AdminOnly")]
+
+@inject NavigationManager NavigationManager
+@inject IAddPersonUseCase AddPersonUseCase
+
+<h3>Add Person</h3>
+<br />
+@if (person != null)
+{
+    <EditForm Model="person" OnValidSubmit="OnValidSumit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+
+        <div class="form-control-file">
+            <label for="image">Image</label>
+            <InputFile OnChange="OnFileChange"> </InputFile>
+
+        </div>
+        <div class="form-group">
+            <label for="firstname">First Name</label>
+            <InputText id="firstname" @bind-Value="person.FirstName" class="form-control"></InputText>
+        </div>
+
+        <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <InputText id="lastname" @bind-Value="person.LastName" class="form-control"></InputText>
+        </div>
+        
+        <div class="form-group">
+            <label for="dateofbirth">Date of Birth</label>
+            <input class="form-control" type="date" id="dateofbirth"  max=@DateTime.Today.ToString("yyyy'-'MM'-'dd")  @bind = "person.DateofBirth">
+        </div>
+
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <InputSelect @bind-Value="person.Gender"  class="form-control">
+                @foreach (var gender in Enum.GetValues(typeof(Person.GenderEnum)))
+                {
+                    <option value="@gender">@gender</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label for="city">City</label>
+            <InputText id="city" @bind-Value="person.city"  class="form-control"></InputText>
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-primary" @onclick="OnCancel">Cancel</button>
+    </EditForm>
+
+}
+
+
+@code {
+
+
+    private Person person;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        person = new Person();
+    }
+
+    private void OnValidSumit()
+    {
+        this.person.Age = ageCalculate(this.person);
+        AddPersonUseCase.Execute(person);
+        NavigationManager.NavigateTo("/people");
+    }
+
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("/people");
+    }
+    async Task OnFileChange(InputFileChangeEventArgs e)
+    {
+        long maxFileSize = 1024 * 1024 * 5; 
+        var format = "image/png";
+        var resizedImage = await e.File.RequestImageFileAsync(format, 300, 300);
+        var readStream = resizedImage.OpenReadStream(maxFileSize);
+        var buf = new byte[readStream.Length];
+        var ms = new MemoryStream(buf);
+        await readStream.CopyToAsync(ms);
+        var buffer = ms.ToArray();
+        var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        person.Image = imageData;
+        @*
+        var buffer = new byte[resizedImage.Size];
+        await resizedImage.OpenReadStream().ReadAsync(buffer);
+        var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        person.Image = imageData;
+        *@
+    }
+
+    public int ageCalculate(Person person)
+    {
+        int age = 0;  
+        age = DateTime.Now.Year - person.DateofBirth.Value.Year;  
+        if (DateTime.Now.DayOfYear < person.DateofBirth.Value.DayOfYear)  
+            age = age - 1;
+        return age;
+    }
+ }

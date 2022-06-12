@@ -1,0 +1,116 @@
+﻿@page "/editperson/{PersonId}"
+@attribute [Authorize(Policy ="AdminOnly")]
+
+@inject NavigationManager NavigationManager
+@inject IAddPersonUseCase AddProductUseCase
+@inject IGetPersonByIdUseCase GetProductByIdUseCase
+@inject IEditPersonUseCase EditProductUseCase
+
+<h3>Edit Person</h3>
+<br />
+
+@if (person != null)
+{
+    <EditForm Model="person" OnValidSubmit="OnValidSumit">
+        <DataAnnotationsValidator></DataAnnotationsValidator>
+        <ValidationSummary></ValidationSummary>
+
+        <div class="form-control-file">
+            <label for="image">Image</label>
+            <InputFile OnChange="OnChangeImage" > </InputFile>
+
+        </div>
+        <div class="form-group">
+            <label for="firstname">First Name</label>
+            <InputText id="firstname" @bind-Value="person.FirstName" class="form-control"></InputText>
+        </div>
+
+        <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <InputText id="lastname" @bind-Value="person.LastName" class="form-control"></InputText>
+        </div>
+        
+        <div class="form-group">
+            <label for="dateofbirth">Date of Birth</label>
+            <input class="form-control" type="date" id="dateofbirth" max=@DateTime.Today.ToString("yyyy'-'MM'-'dd")  @bind = "person.DateofBirth">
+        </div>
+
+        <div class="form-group">
+            <label for="gender">Gender</label>
+            <InputSelect @bind-Value="person.Gender"  class="form-control">
+                @foreach (var gender in Enum.GetValues(typeof(Person.GenderEnum)))
+                {
+                    <option value="@gender">@gender</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="form-group">
+            <label for="city">City</label>
+            <InputText id="city" @bind-Value="person.city"  class="form-control"></InputText>
+        </div>
+    
+        <button type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-primary" @onclick="OnCancel">Cancel</button>
+    </EditForm>
+
+}
+@code {
+    [Parameter]
+    public string PersonId { get; set; }
+
+    private Person person;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }    
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (int.TryParse(this.PersonId, out int iPersonId))
+        {
+            var prod = GetProductByIdUseCase.Execute(iPersonId);
+            this.person = new Person { 
+                PersonId = prod.PersonId,
+                FirstName = prod.FirstName,
+                LastName = prod.LastName,
+                DateofBirth = prod.DateofBirth,
+                Gender = prod.Gender,
+                city = prod.city,
+                Age = prod.Age
+            };
+        }
+    }
+    
+    private void OnValidSumit()
+    {
+        this.person.Age = ageCalculate(this.person);
+        EditProductUseCase.Execute(this.person);
+        NavigationManager.NavigateTo("/people");
+    }
+
+    private void OnCancel()
+    {
+        NavigationManager.NavigateTo("/people");
+    }
+    public int ageCalculate(Person person)
+    {
+        int age = 0;  
+        age = DateTime.Now.Year - person.DateofBirth.Value.Year;  
+        if (DateTime.Now.DayOfYear < person.DateofBirth.Value.DayOfYear)  
+            age = age - 1;
+        return age;
+    }
+    private async Task OnChangeImage(InputFileChangeEventArgs e)
+    {
+        var format = "image/png";
+        var resizedImage = await e.File.RequestImageFileAsync(format, 300, 300);
+        var buffer = new byte[resizedImage.Size];
+        await resizedImage.OpenReadStream(maxAllowedSize:5242880).ReadAsync(buffer);
+        var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
+        this.person.Image = imageData;
+    }
+}

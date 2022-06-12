@@ -10,8 +10,8 @@ using WebApp.Data;
 namespace WebApp.Migrations
 {
     [DbContext(typeof(AccountContext))]
-    [Migration("20220610220256_CreateIdentityShema")]
-    partial class CreateIdentityShema
+    [Migration("20220612102420_IdentitySchema")]
+    partial class IdentitySchema
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
