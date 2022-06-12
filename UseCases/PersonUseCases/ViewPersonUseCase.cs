@@ -8,9 +8,9 @@ namespace UseCases
     {
         private readonly IPersonRepository personRepository;
 
-        public ViewPersonUseCase(IPersonRepository productRepository)
+        public ViewPersonUseCase(IPersonRepository personRepository)
         {
-            this.personRepository = productRepository;
+            this.personRepository = personRepository;
         }
 
         public IEnumerable<Person> Execute()

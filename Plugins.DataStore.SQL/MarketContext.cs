@@ -12,6 +12,7 @@ namespace Plugins.DataStore.SQL
         }
 
         public DbSet<Person> People { get; set; }
+        public DbSet<City> Cities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -27,6 +27,7 @@ namespace CoreBusiness
         [RegularExpression(@"^[a-zA-Z_ ]*$", ErrorMessage = "LastName cannot contain numbers ")]
         public string LastName { get; set; }
 
+        [Required]
         [DataType(DataType.Date)]
         public DateTime? DateofBirth { get; set; }
                 

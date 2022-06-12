@@ -3,10 +3,11 @@
 
 @inject NavigationManager NavigationManager
 @inject IAddPersonUseCase AddPersonUseCase
+@inject IViewCityUseCase ViewCityUseCase
 
 <h3>Add Person</h3>
 <br />
-@if (person != null)
+@if (person != null && cities != null)
 {
     <EditForm Model="person" OnValidSubmit="OnValidSumit">
         <DataAnnotationsValidator></DataAnnotationsValidator>
@@ -41,10 +42,15 @@
                 }
             </InputSelect>
         </div>
-
-        <div class="form-group">
+        <div  class="form-group">
             <label for="city">City</label>
-            <InputText id="city" @bind-Value="person.city"  class="form-control"></InputText>
+            <select id="city" @bind="person.city" class="form-control">
+                <option selected></option>
+                @foreach (var city in cities)
+                {
+                    <option value="@city.cityName">@city.cityName</option>
+                }
+            </select>
         </div>
     
         <button type="submit" class="btn btn-primary">Save</button>
@@ -58,11 +64,14 @@
 
 
     private Person person;
+    private IEnumerable<City> cities;
+
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
         person = new Person();
+        cities = ViewCityUseCase.Execute();
     }
 
     private void OnValidSumit()

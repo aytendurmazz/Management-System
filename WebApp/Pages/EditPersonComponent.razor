@@ -5,6 +5,7 @@
 @inject IAddPersonUseCase AddProductUseCase
 @inject IGetPersonByIdUseCase GetProductByIdUseCase
 @inject IEditPersonUseCase EditProductUseCase
+@inject IViewCityUseCase ViewCityUseCase
 
 <h3>Edit Person</h3>
 <br />
@@ -47,7 +48,12 @@
 
         <div class="form-group">
             <label for="city">City</label>
-            <InputText id="city" @bind-Value="person.city"  class="form-control"></InputText>
+            <InputSelect @bind-Value="person.city"  class="form-control">
+                @foreach (var city in cities)
+                {
+                    <option value="@city">@city.cityName</option>
+                }
+            </InputSelect>
         </div>
     
         <button type="submit" class="btn btn-primary">Save</button>
@@ -60,10 +66,12 @@
     public string PersonId { get; set; }
 
     private Person person;
+    private IEnumerable<City> cities;
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
+        cities = ViewCityUseCase.Execute();
     }    
 
     protected override void OnParametersSet()

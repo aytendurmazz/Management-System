@@ -19,6 +19,21 @@ namespace Plugins.DataStore.SQL.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("CoreBusiness.City", b =>
+                {
+                    b.Property<int>("cityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("cityName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("cityId");
+
+                    b.ToTable("Cities");
+                });
+
             modelBuilder.Entity("CoreBusiness.Person", b =>
                 {
                     b.Property<int>("PersonId")
@@ -29,12 +44,14 @@ namespace Plugins.DataStore.SQL.Migrations
                     b.Property<int>("Age")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("DateofBirth")
+                    b.Property<DateTime?>("DateofBirth")
+                        .IsRequired()
                         .HasColumnType("datetime2");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<int>("Gender")
                         .HasColumnType("int");
@@ -44,7 +61,8 @@ namespace Plugins.DataStore.SQL.Migrations
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(40)
+                        .HasColumnType("nvarchar(40)");
 
                     b.Property<string>("city")
                         .IsRequired()
