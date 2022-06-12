@@ -23,13 +23,13 @@
                 <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
                 <div class="row">
                     <div class="col-md-4 ">
-                        <RadzenButton Click=@(args => OnClickAddPerson()) Text="Add Person" Icon="check_circle" ButtonStyle="ButtonStyle.Primary" />
+                        <RadzenButton Click=@(args => OnClickAddPerson()) Text="Add Person" Icon="check_circle" ButtonStyle="ButtonStyle.Light" />
                     </div>
                     <div class="col-md-4 ">
-                        <RadzenButton Click=@(args => OnEditPerson(Person)) Text="Edit Person" Icon="warning_amber" ButtonStyle="ButtonStyle.Primary" /> 
+                        <RadzenButton Click=@(args => OnEditPerson(Person)) Text="Edit Person" Icon="warning_amber" ButtonStyle="ButtonStyle.Light" /> 
                     </div>
                     <div class="col-md-4 ">
-                        <RadzenButton Click=@(args => OnDeletePerson(Person.PersonId)) Text="Delete Person" Icon="report" ButtonStyle="ButtonStyle.Primary" /> 
+                        <RadzenButton Click=@(args => OnDeletePerson(Person.PersonId)) Text="Delete Person" Icon="report" ButtonStyle="ButtonStyle.Light" /> 
                     </div>
                 </div>
             </RadzenCard>

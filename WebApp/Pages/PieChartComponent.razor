@@ -1,0 +1,41 @@
+﻿@page "/piechart"
+@attribute [Authorize(Policy = "AdminOnly")]
+
+@inject IViewPersonUseCase ViewPersonUseCase
+
+<h3>Pie Chart Showing Number of People by Gender</h3>
+<div class="row">
+    <div class="col-md-6">
+        <RadzenChart>
+            <RadzenPieSeries  Data="@data" 
+                Title="Pie Chat Gender"
+            CategoryProperty="genderType"
+            ValueProperty="genderCount">
+
+            </RadzenPieSeries>
+        </RadzenChart>
+    </div>
+</div>
+
+
+@code {
+    private class DataItem
+    {
+        public string genderType { get; set; }
+        public int genderCount { get; set; }
+    }
+
+    private static List<Person> people;
+    DataItem[] data;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        people = ViewPersonUseCase.Execute().ToList();
+        data = new DataItem[] {
+            new DataItem { genderType = "Female",genderCount = people.Count(item => item.Gender == Person.GenderEnum.Female)},
+            new DataItem { genderType = "Male",genderCount = people.Count(item => item.Gender == Person.GenderEnum.Male)}
+        };
+    }
+}

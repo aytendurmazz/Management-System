@@ -1,0 +1,46 @@
+﻿@page "/barchart"
+
+@attribute [Authorize(Policy = "AdminOnly")]
+
+@inject IViewPersonUseCase ViewPersonUseCase
+
+<h3>Bar Chart Showing Number of People by Age</h3>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12 my-5">
+            <RadzenChart>
+                <RadzenBarSeries Data="@data" CategoryProperty="ageValue" Title="Person Count" LineType="LineType.Dashed" ValueProperty="valueCount" />
+                <RadzenValueAxis>
+                    <RadzenGridLines Visible="true" />
+                    <RadzenAxisTitle Text="Number of Person" />
+                </RadzenValueAxis>
+                <RadzenBarOptions Radius="5" />
+            </RadzenChart>
+          </div>
+    </div>
+</div>
+
+
+@code {
+
+    private class DataItem
+    {
+        public string ageValue { get; set; }
+        public int valueCount { get; set; }
+    }
+
+    private static List<Person> people;
+    DataItem[] data;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        people = ViewPersonUseCase.Execute().ToList();
+        data = new DataItem[] {
+            new DataItem { ageValue = "0-15" , valueCount = people.Count(item => ((item.Age)< 15 && (item.Age) >=0)) },
+            new DataItem { ageValue = "15-30", valueCount = people.Count(item => ((item.Age) < 30 && (item.Age) >= 15)) },
+            new DataItem { ageValue = "30-45", valueCount = people.Count(item => ((item.Age) < 45 && (item.Age) >= 30)) },
+            new DataItem { ageValue = "45+", valueCount = people.Count(item => (item.Age >= 45)) }
+        };
+    }
+}
