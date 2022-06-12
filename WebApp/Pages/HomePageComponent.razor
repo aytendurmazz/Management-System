@@ -1,0 +1,65 @@
+﻿@page "/people"
+
+@attribute [Authorize(Policy = "AdminOnly")]
+
+@inject NavigationManager NavigationManager
+@inject IViewPersonUseCase ViewPersonUseCase
+@inject IDeletePersonUseCase DeletePersonUseCase
+
+
+@if (people != null)
+{
+    <RadzenDataList WrapItems="true" AllowPaging="false" Data="@people" TItem="Person">
+        <Template Context="Person">
+            <RadzenCard Style="width:300px">
+                <div class="d-flex flex-row align-items-center">
+                    <RadzenImage Path="@Person.Image" Class="rounded-circle float-left mr-3" Style="width: 80px; height: 80px;" />
+                    <div>
+                        <h4 class="mb-0">@(Person.FirstName + " " + Person.LastName)</h4>
+                        <div>@Person.DateofBirth.ToString().Substring(0,10)</div>
+                        <div style="font-size: .8em">@(Person.Gender + " - " + Person.Age+ " - "+ Person.city)</div>
+                    </div>
+                </div>
+                <hr style="border: none; background-color: rgba(0,0,0,.08); height: 1px; margin: 1rem 0;" />
+                <div class="row">
+                    <div class="col-md-4 ">
+                        <RadzenButton Click=@(args => OnClickAddPerson()) Text="Add Person" Icon="check_circle" ButtonStyle="ButtonStyle.Primary" />
+                    </div>
+                    <div class="col-md-4 ">
+                        <RadzenButton Click=@(args => OnEditPerson(Person)) Text="Edit Person" Icon="warning_amber" ButtonStyle="ButtonStyle.Primary" /> 
+                    </div>
+                    <div class="col-md-4 ">
+                        <RadzenButton Click=@(args => OnDeletePerson(Person.PersonId)) Text="Delete Person" Icon="report" ButtonStyle="ButtonStyle.Primary" /> 
+                    </div>
+                </div>
+            </RadzenCard>
+        </Template>
+    </RadzenDataList>
+}
+
+@code {
+    private IEnumerable<Person> people;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        people = ViewPersonUseCase.Execute();
+    }
+
+    private void OnClickAddPerson()
+    {
+        NavigationManager.NavigateTo("/addperson");
+    }
+
+    private void OnEditPerson(Person person)
+    {
+        NavigationManager.NavigateTo($"/editperson/{person.PersonId}");
+    }
+
+    private void OnDeletePerson(int PersonId)
+    {
+        DeletePersonUseCase.Execute(PersonId);
+        NavigationManager.NavigateTo("/people");
+    }
+}
