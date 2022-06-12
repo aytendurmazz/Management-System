@@ -1,0 +1,42 @@
+﻿@page "/transactions"
+
+@attribute [Authorize(Policy = "AdminOnly")]
+
+@inject NavigationManager NavigationManager
+@inject IViewPersonUseCase ViewPersonUseCase
+
+@if(people != null)
+{
+    <RadzenGrid AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="4" AllowSorting="true" Data="@people" TItem="Person" ColumnWidth="150px">
+
+        <Columns>
+            <RadzenGridColumn TItem="Person" Property="Image" Title="Image">
+            <Template Context="data">
+                    <RadzenImage Path="@data.Image" style="width: 40px; height: 40px; border-radius: 8px;" />
+                </Template>    
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="Person" Property="FirstName" Title="First Name"> </RadzenGridColumn>
+            <RadzenGridColumn TItem="Person" Property="LastName" Title="Last Name"> </RadzenGridColumn>
+            <RadzenGridColumn TItem="Person" Property="Gender" Title="Gender"> </RadzenGridColumn>
+            <RadzenGridColumn TItem="Person" Property="DateofBirth" Title="Date of Birth">
+            <Template Context="data">
+                @String.Format("{0:d}",data.DateofBirth)
+            </Template>
+            </RadzenGridColumn>
+            <RadzenGridColumn TItem="Person" Property="city" Title="City"> </RadzenGridColumn>
+            <RadzenGridColumn TItem="Person" Property="Age" Title="Age"> </RadzenGridColumn>
+        </Columns>
+    </RadzenGrid>
+}
+
+@code {
+    private IEnumerable<Person> people;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        people = ViewPersonUseCase.Execute();
+    }
+
+}
