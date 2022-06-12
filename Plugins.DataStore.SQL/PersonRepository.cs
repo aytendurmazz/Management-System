@@ -49,6 +49,7 @@ namespace Plugins.DataStore.SQL
             prod.Gender = person.Gender;
             prod.city = person.city;
             prod.Age = person.Age;
+            prod.Image = person.Image;
             db.SaveChanges();
         }
     }

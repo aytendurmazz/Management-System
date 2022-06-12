@@ -1,4 +1,5 @@
 ﻿@page "/people"
+@using System.Globalization
 @attribute [Authorize(Policy = "AdminOnly")]
 
 @inject NavigationManager NavigationManager
@@ -15,7 +16,7 @@
                 <th>Profile Picture</th>
                 <th>FirstName</th>
                 <th>LastName</th>
-                <th>DateofBirth</th>
+                <th>Date of Birth</th>
                 <th>Gender</th>
                 <th>City</th>
                 <th>Age</th>
@@ -29,7 +30,7 @@
                     <td><img src="@person.Image" style="width:75px;height:auto;" /></td>
                     <td>@person.FirstName</td>
                     <td>@person.LastName</td>
-                    <td>@person.DateofBirth</td>
+                    <td>@person.DateofBirth.ToString().Substring(0,10)</td>
                     <td>@person.Gender</td>
                     <td>@person.city</td>
                     <td>@person.Age</td>

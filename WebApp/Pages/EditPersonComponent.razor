@@ -2,9 +2,9 @@
 @attribute [Authorize(Policy ="AdminOnly")]
 
 @inject NavigationManager NavigationManager
-@inject IAddPersonUseCase AddProductUseCase
-@inject IGetPersonByIdUseCase GetProductByIdUseCase
-@inject IEditPersonUseCase EditProductUseCase
+@inject IAddPersonUseCase AddPersonUseCase
+@inject IGetPersonByIdUseCase GetPersonByIdUseCase
+@inject IEditPersonUseCase EditPersonUseCase
 @inject IViewCityUseCase ViewCityUseCase
 
 <h3>Edit Person</h3>
@@ -46,14 +46,15 @@
             </InputSelect>
         </div>
 
-        <div class="form-group">
+        <div  class="form-group">
             <label for="city">City</label>
-            <InputSelect @bind-Value="person.city"  class="form-control">
+            <select id="city" @bind="person.city" class="form-control">
+                <option selected></option>
                 @foreach (var city in cities)
                 {
-                    <option value="@city">@city.cityName</option>
+                    <option value="@city.cityName">@city.cityName</option>
                 }
-            </InputSelect>
+            </select>
         </div>
     
         <button type="submit" class="btn btn-primary">Save</button>
@@ -67,6 +68,7 @@
 
     private Person person;
     private IEnumerable<City> cities;
+    private string changeImage;
 
     protected override void OnInitialized()
     {
@@ -80,7 +82,7 @@
 
         if (int.TryParse(this.PersonId, out int iPersonId))
         {
-            var prod = GetProductByIdUseCase.Execute(iPersonId);
+            var prod = GetPersonByIdUseCase.Execute(iPersonId);
             this.person = new Person { 
                 PersonId = prod.PersonId,
                 FirstName = prod.FirstName,
@@ -92,11 +94,12 @@
             };
         }
     }
-    
+
     private void OnValidSumit()
     {
         this.person.Age = ageCalculate(this.person);
-        EditProductUseCase.Execute(this.person);
+        this.person.Image = changeImage;
+        EditPersonUseCase.Execute(this.person);
         NavigationManager.NavigateTo("/people");
     }
 
@@ -119,6 +122,6 @@
         var buffer = new byte[resizedImage.Size];
         await resizedImage.OpenReadStream(maxAllowedSize:5242880).ReadAsync(buffer);
         var imageData = $"data:{format};base64,{Convert.ToBase64String(buffer)}";
-        this.person.Image = imageData;
+        this.changeImage = imageData;
     }
 }
