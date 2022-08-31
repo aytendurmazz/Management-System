@@ -85,6 +85,7 @@
             var prod = GetPersonByIdUseCase.Execute(iPersonId);
             this.person = new Person { 
                 PersonId = prod.PersonId,
+                Image = prod.Image,
                 FirstName = prod.FirstName,
                 LastName = prod.LastName,
                 DateofBirth = prod.DateofBirth,

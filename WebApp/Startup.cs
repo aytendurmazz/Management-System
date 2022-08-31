@@ -26,7 +26,6 @@ namespace WebApp
         {
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddSingleton<WeatherForecastService>();
 
             services.AddDbContext<MarketContext>(options =>
             {
@@ -36,6 +35,7 @@ namespace WebApp
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("AdminOnly", p => p.RequireClaim("Position", "Admin"));
+                options.AddPolicy("ClientOnly", p => p.RequireClaim("Position", "Client"));
             });
 
             //Dependency Injection for ef core Data Store for SQL

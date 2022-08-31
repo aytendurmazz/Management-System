@@ -1,19 +1,17 @@
 ﻿@page "/transactions"
 
-@attribute [Authorize(Policy = "AdminOnly")]
-
 @inject NavigationManager NavigationManager
 @inject IViewPersonUseCase ViewPersonUseCase
 
 @if(people != null)
 {
-    <RadzenGrid AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="4" AllowSorting="true" Data="@people" TItem="Person" ColumnWidth="150px">
+    <RadzenGrid AllowPaging="true" AllowFiltering="true" FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive" PageSize="10" AllowSorting="true" Data="@people" TItem="Person" ColumnWidth="150px">
 
         <Columns>
             <RadzenGridColumn TItem="Person" Property="Image" Title="Image">
             <Template Context="data">
                     <RadzenImage Path="@data.Image" style="width: 40px; height: 40px; border-radius: 8px;" />
-                </Template>    
+            </Template>    
             </RadzenGridColumn>
             <RadzenGridColumn TItem="Person" Property="FirstName" Title="First Name"> </RadzenGridColumn>
             <RadzenGridColumn TItem="Person" Property="LastName" Title="Last Name"> </RadzenGridColumn>
